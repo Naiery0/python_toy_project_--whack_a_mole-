@@ -1,4 +1,5 @@
-# 두더지게임?
+# mainScrreen.py
+
 from tkinter import *
 from tkinter.messagebox import askokcancel  # 닉네임 입력
 from tkinter.scrolledtext import ScrolledText  # 랭킹 도식
@@ -54,7 +55,7 @@ class MainScreen(Tk):
 
         # 닉네임 입력 칸 
         self.nameEntry = Entry(self.lowFrame, font=("Arial", 14), width=20, fg="gray")
-        self.nameEntry.insert(0, "닉네임 입력")  # 초기 텍스트 설정
+        self.nameEntry.insert(0, "닉네임 입력")  # 초기 텍스트 설정 
         self.nameEntry.bind("<FocusIn>", self.clear_placeholder)
         self.nameEntry.bind("<FocusOut>", self.restore_placeholder)
         self.nameEntry.pack(pady=10)
@@ -77,13 +78,12 @@ class MainScreen(Tk):
             print("닉네임을 입력해주세요!")
 
         self.clear_screen()  # 기존 화면을 지운다.
-        game_screen = InGameScreen(self, self.mainFrame)  # 새로운 게임 화면을 추가
+        game_screen = InGameScreen(self.mainFrame, self)  # 새로운 게임 화면을 추가
         game_screen.pack(fill="both", expand=True)  # 게임 화면을 메인 프레임에 추가
 
     def clear_screen(self):
         for widget in self.mainFrame.winfo_children():
             widget.destroy()  # 기존에 있던 모든 위젯을 제거
-            
             
     def show_ranking(self, event):
         print("랭킹을 불러옵니다...")
@@ -101,8 +101,6 @@ class MainScreen(Tk):
 if __name__ == '__main__':
     app = MainScreen()
     app.mainloop()
-
-
 
 #     root.protocol('WM_DELETE_WINDOW', onClosing)
 # root.mainloop()
