@@ -43,7 +43,7 @@ class MainScreen(Tk):
 
         # Canvas 버튼 생성
         self.startCanvas = Canvas(self.lowFrame, width=200, height=50, bg="gray", highlightthickness=0)
-        self.startCanvas.pack(pady=50)
+        self.startCanvas.pack(pady=(50,10))
 
         # 클릭 가능한 사각형 추가 (투명한 버튼 역할)
         self.buttonRect = self.startCanvas.create_rectangle(0, 0, 200, 50, fill="gray", outline="black")
@@ -53,33 +53,55 @@ class MainScreen(Tk):
         self.startCanvas.tag_bind(self.buttonRect, "<Button-1>", self.start_game)
         self.startCanvas.tag_bind(self.startText, "<Button-1>", self.start_game)
 
-        # 닉네임 입력 칸 
+        # 닉네임 입력 칸
         self.nameEntry = Entry(self.lowFrame, font=("Arial", 14), width=20, fg="gray")
         self.nameEntry.insert(0, "닉네임 입력")  # 초기 텍스트 설정 
         self.nameEntry.bind("<FocusIn>", self.clear_placeholder)
         self.nameEntry.bind("<FocusOut>", self.restore_placeholder)
-        self.nameEntry.pack(pady=10)
+        self.nameEntry.pack(pady=(5,5))  
+
+        # 닉네임 경고 메시지 (기본적으로 숨김)
+        self.nameWarning = Label(self.lowFrame, text=" ", font=("Arial", 12), fg="red", bg='white')
+        self.nameWarning.pack(pady=(5, 0))
 
         # 랭킹 보기 버튼
         self.rankCanvas = Canvas(self.lowFrame, width=200, height=50, bg="gray", highlightthickness=0)
-        self.rankCanvas.pack(pady=10)
+        self.rankCanvas.pack(pady=50)
         self.rankRect = self.rankCanvas.create_rectangle(0, 0, 200, 50, fill="gray", outline="black")
         self.rankText = self.rankCanvas.create_text(100, 25, text="랭킹 보기", font=("Arial", 16), fill="black")
         self.rankCanvas.tag_bind(self.rankRect, "<Button-1>", self.show_ranking)
         self.rankCanvas.tag_bind(self.rankText, "<Button-1>", self.show_ranking)
 
+    # 게임 화면 전환 함수
+    # nick is nickname
     def start_game(self, event):
-        
-        nickname = self.nameEntry.get()
-        
-        if nickname:
-            print(f"{nickname} 님, 게임이 시작됩니다!")
-        else:
-            print("닉네임을 입력해주세요!")
+        nick = self.set_nickname()
+        if nick:
+            # print(f"{nick} 님, 게임이 시작됩니다!")
+            self.clear_screen()  # 기존 화면을 지운다.
+            game_screen = InGameScreen(self.mainFrame, self, nick)  # 새로운 게임 화면을 추가
+            game_screen.pack(fill="both", expand=True)  # 게임 화면을 메인 프레임에 추가
+        else: 
+            return
 
-        self.clear_screen()  # 기존 화면을 지운다.
-        game_screen = InGameScreen(self.mainFrame, self)  # 새로운 게임 화면을 추가
-        game_screen.pack(fill="both", expand=True)  # 게임 화면을 메인 프레임에 추가
+    # 닉네임 검사 함수
+    def set_nickname(self):
+        nickname = self.nameEntry.get().strip()
+        if not nickname or nickname == "닉네임 입력":
+            self.update_warning("닉네임을 입력해주세요!") 
+            return 0
+        elif len(nickname) < 3:
+            self.update_warning("닉네임은 최소 3자 이상 입력해야 합니다!") 
+            return 0
+        elif len(nickname) > 7:
+            self.update_warning("닉네임을 8자 이상으로 설정할 수 없습니다!")  
+            return 0
+        elif " " in nickname:
+            self.update_warning("닉네임에는 공백을 포함할 수 없습니다!")
+            return 0
+        else:
+            # self.update_warning("")  # 👈 정상 입력 시 메시지 숨김
+            return nickname
 
     def clear_screen(self):
         for widget in self.mainFrame.winfo_children():
@@ -97,6 +119,9 @@ class MainScreen(Tk):
         if not self.nameEntry.get():  # 입력칸이 비어 있으면 다시 placeholder 표시
             self.nameEntry.insert(0, "닉네임 입력")
             self.nameEntry.config(fg="gray")
+
+    def update_warning(self, message): # 경고 메시지 출력 함수
+            self.nameWarning.config(text=message)       
 
 if __name__ == '__main__':
     app = MainScreen()
