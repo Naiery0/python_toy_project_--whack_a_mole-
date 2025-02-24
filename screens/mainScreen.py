@@ -79,7 +79,7 @@ class MainScreen(Tk):
         if nick:
             # print(f"{nick} 님, 게임이 시작됩니다!")
             self.clear_screen()  # 기존 화면을 지운다.
-            game_screen = InGameScreen(self.mainFrame, self, nick)  # 새로운 게임 화면을 추가
+            game_screen = InGameScreen(self.mainFrame, self)#, nick)  # 새로운 게임 화면을 추가
             game_screen.pack(fill="both", expand=True)  # 게임 화면을 메인 프레임에 추가
         else: 
             return
@@ -87,21 +87,23 @@ class MainScreen(Tk):
     # 닉네임 검사 함수
     def set_nickname(self):
         nickname = self.nameEntry.get().strip()
-        if not nickname or nickname == "닉네임 입력":
-            self.update_warning("닉네임을 입력해주세요!") 
-            return 0
-        elif len(nickname) < 3:
-            self.update_warning("닉네임은 최소 3자 이상 입력해야 합니다!") 
-            return 0
-        elif len(nickname) > 7:
-            self.update_warning("닉네임을 8자 이상으로 설정할 수 없습니다!")  
-            return 0
-        elif " " in nickname:
-            self.update_warning("닉네임에는 공백을 포함할 수 없습니다!")
-            return 0
-        else:
-            # self.update_warning("")  # 👈 정상 입력 시 메시지 숨김
-            return nickname
+        
+        return nickname # _test
+        # if not nickname or nickname == "닉네임 입력":
+        #     self.update_warning("닉네임을 입력해주세요!") 
+        #     return 0
+        # elif len(nickname) < 3:
+        #     self.update_warning("닉네임은 최소 3자 이상 입력해야 합니다!") 
+        #     return 0
+        # elif len(nickname) > 7:
+        #     self.update_warning("닉네임을 8자 이상으로 설정할 수 없습니다!")  
+        #     return 0
+        # elif " " in nickname:
+        #     self.update_warning("닉네임에는 공백을 포함할 수 없습니다!")
+        #     return 0
+        # else:
+        #     # self.update_warning("")  # 👈 정상 입력 시 메시지 숨김
+        #     return nickname
 
     def clear_screen(self):
         for widget in self.mainFrame.winfo_children():

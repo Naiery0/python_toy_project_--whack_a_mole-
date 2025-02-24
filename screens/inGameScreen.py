@@ -5,12 +5,15 @@ from tkinter import *
 from PIL import Image, ImageTk  # 이미지 처리
 
 class InGameScreen(Frame):
-    def __init__(self, master, main_screen, nick):
-        print(f"{nick} 님, 게임을 시작했습니다!")
+    def __init__(self, master, main_screen):#, nick):
+        # print(f"{nick} 님, 게임을 시작했습니다!")
 
         super().__init__(master)
         self.main_screen = main_screen  # 메인 화면 참조
-        self.nickname = nick  # 닉네임 저장
+        
+        # self.nickname = nick  # 닉네임 저장 
+        self.nickname = 'test' #_test
+
         self.configure(bg="white")
 
         # 전체 레이아웃
@@ -64,7 +67,8 @@ class InGameScreen(Frame):
     def update_countdown(self, num):
         if num > 0:
             self.start_button.config(text=str(num))  # 숫자 변경
-            self.after(1000, self.update_countdown, num - 1)  # 1초 후 감소
+            # self.after(1000, self.update_countdown, num - 1)  # 1초 후 감소
+            self.after(1, self.update_countdown, num - 1)  # _test
         else:
             self.start_button.destroy()  # 버튼 삭제
             self.all_show_hole()  # hole.png 이미지 삽입
@@ -87,5 +91,3 @@ class InGameScreen(Frame):
     def quit_game(self): 
         self.main_screen.mainFrame.destroy()  # 기존 mainFrame 삭제
         self.main_screen.init_screen()        # 새 mainFrame 생성
-
-
