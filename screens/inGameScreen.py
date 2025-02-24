@@ -77,15 +77,11 @@ class InGameScreen(Frame):
     def all_show_hole(self):
         for row in self.cells:
             for cell in row:
-                cell.create_image(90, 110, image=self.hole_img)  # 약간 아래에 배치
-
+                self.show_hole(cell)
                 
-    # # 특정 그리드에 hole.png 이미지 삽입
-    # def show_hole(self):
-    #     for row in self.cells:
-    #         for cell in row:
-    #             cell.create_image(90, 90, image=self.hole_img)
-
+    # 특정 그리드에 hole.png 이미지 삽입
+    def show_hole(self, cell):
+        cell.create_image(90, 90, image=self.hole_img)
 
 # 게임 종료 -> command=self.quit_game
     def quit_game(self): 
