@@ -4,13 +4,26 @@ from tkinter import *
 
 from PIL import Image, ImageTk  # 이미지 처리
 
+from logic.gameLogic import GameLogic # 게임 로직 임포트
+
 class InGameScreen(Frame):
     def __init__(self, master, main_screen):#, nick):
         # print(f"{nick} 님, 게임을 시작했습니다!")
 
         super().__init__(master)
-        self.main_screen = main_screen  # 메인 화면 참조
         
+        # 메인 화면 참조    
+        self.main_screen = main_screen     
+
+        # 게임 로직 인스턴스 생성
+        self.game_logic = GameLogic(self.show_jam, self.game_over)
+        
+        # 이미지 로드
+        self.heart_img = ImageTk.PhotoImage(Image.open("./assets/image/heart.png").resize((40, 40))) # 하트
+        self.hole_img = ImageTk.PhotoImage(Image.open("./assets/image/hole.png").resize((150, 150))) # 빈 구멍
+        self.jam_img = ImageTk.PhotoImage(Image.open("./assets/image/hole_in_jam.png").resize((150, 150))) # 잠만보가 나타남
+        self.hit_img = ImageTk.PhotoImage(Image.open("./assets/image/hit_jam.png").resize((150, 150))) # 잠만보가 맞음
+
         # self.nickname = nick  # 닉네임 저장 
         self.nickname = 'test' #_test
 
@@ -44,20 +57,26 @@ class InGameScreen(Frame):
         self.nickname_display = Label(self.right_panel, text=self.nickname, font=("Arial", 16, "bold"), bg="white", width=10, height=2, relief="ridge")
         self.nickname_display.pack(pady=5)
 
+        # ❤️ 하트 프레임
+        self.heart_frame = Frame(self.right_panel, bg="lightblue")
+        self.heart_frame.pack(pady=5)
+
+        # 하트 이미지 로드
+        self.hearts = []  # 하트 라벨 리스트
+
+        for i in range(3):
+            heart_label = Label(self.heart_frame, image=self.heart_img, bg="lightblue")
+            heart_label.pack(side=LEFT, padx=5)  # 가로 정렬
+            self.hearts.append(heart_label)
+
         self.score_label = Label(self.right_panel, text="SCORE", font=("Arial", 12), bg="lightblue")
-        self.score_label.pack(pady=10)
+        self.score_label.pack(pady=(60,10))
 
         self.score_display = Label(self.right_panel, text="0", font=("Arial", 20, "bold"), bg="white", width=10, height=2, relief="ridge")
-        self.score_display.pack(pady=5)
+        self.score_display.pack(pady=(5,60))
 
         self.quit_button = Button(self.right_panel, text="게임 종료", command=self.quit_game)
         self.quit_button.pack(pady=20)
-
-        # 이미지 로드
-        self.hole_img = ImageTk.PhotoImage(Image.open("./assets/image/hole.png").resize((150, 150))) 
-        self.jam_img = ImageTk.PhotoImage(Image.open("./assets/image/hole_in_jam.png").resize((150, 150))) 
-        self.hit_img = ImageTk.PhotoImage(Image.open("./assets/image/hit_jam.png").resize((150, 150))) 
-        
 
     # 3 → 2 → 1 카운트다운 기능
     def start_countdown(self):
@@ -82,6 +101,20 @@ class InGameScreen(Frame):
     # 특정 그리드에 hole.png 이미지 삽입
     def show_hole(self, cell):
         cell.create_image(90, 90, image=self.hole_img)
+
+    # 뿅
+    def show_jam(self, cell):
+        cell.create_image(90, 90, image=self.jam_img)
+
+    # 꽥
+    def show_hit(self, cell):
+        cell.create_image(90, 90, image=self.hit_img)
+
+    # ❤️ 하트 제거 함수
+    def remove_heart(self):
+        if self.hearts:
+            heart = self.hearts.pop()  # 리스트에서 하나 제거
+            heart.destroy()  # UI에서도 제거
 
 # 게임 종료 -> command=self.quit_game
     def quit_game(self): 
