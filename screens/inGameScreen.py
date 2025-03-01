@@ -4,24 +4,21 @@ from tkinter import *
 
 from PIL import Image, ImageTk  # 이미지 처리
 
-from logic.gameLogic import GameLogic # 게임 로직 임포트
+from ..logic.gameLogic import GameLogic
 
 class InGameScreen(Frame):
     def __init__(self, master, main_screen):#, nick):
         # print(f"{nick} 님, 게임을 시작했습니다!")
-
         super().__init__(master)
-        
         # 메인 화면 참조    
         self.main_screen = main_screen     
 
-        # 게임 로직 인스턴스 생성
         self.game_logic = GameLogic(self.show_jam, self.game_over)
         
         # 이미지 로드
         self.heart_img = ImageTk.PhotoImage(Image.open("./assets/image/heart.png").resize((40, 40))) # 하트
         self.hole_img = ImageTk.PhotoImage(Image.open("./assets/image/hole.png").resize((150, 150))) # 빈 구멍
-        self.jam_img = ImageTk.PhotoImage(Image.open("./assets/image/hole_in_jam.png").resize((150, 150))) # 잠만보가 나타남
+        self.mole_img = ImageTk.PhotoImage(Image.open("./assets/image/hole_in_jam.png").resize((150, 150))) # 잠만보가 나타남
         self.hit_img = ImageTk.PhotoImage(Image.open("./assets/image/hit_jam.png").resize((150, 150))) # 잠만보가 맞음
 
         # self.nickname = nick  # 닉네임 저장 
@@ -104,7 +101,7 @@ class InGameScreen(Frame):
 
     # 뿅
     def show_jam(self, cell):
-        cell.create_image(90, 90, image=self.jam_img)
+        cell.create_image(90, 90, image=self.mole_img)
 
     # 꽥
     def show_hit(self, cell):
